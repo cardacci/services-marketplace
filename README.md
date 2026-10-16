@@ -1,6 +1,6 @@
 # Services Marketplace
 
-> 🚧 Work in progress - personal full-stack project.
+> 🚧 Work in progress
 
 A marketplace where clients find nearby professionals (plumbers, gas fitters, electricians, painters, carpenters, roofers), book appointments, chat with them and leave reviews. It starts with home-repair trades and is designed to grow into any kind of service.
 
@@ -22,20 +22,20 @@ A marketplace where clients find nearby professionals (plumbers, gas fitters, el
 | Backend | NestJS, TypeScript, Prisma, Socket.IO, Passport (Google OAuth + JWT), Swagger/OpenAPI |
 | Database | PostgreSQL + PostGIS |
 | Validation | Zod, shared between frontend and backend |
-| Testing | Jest, Supertest, Testcontainers, Vitest, Testing Library, Playwright |
+| Testing | Jest + Supertest (API) |
 | Tooling | pnpm workspaces, Turborepo, ESLint, Prettier, Husky, Conventional Commits |
 | CI/CD | GitHub Actions |
-| Hosting | Vercel (web), Render (API), Neon (PostgreSQL) |
+| Hosting | Render (web static site + API), Neon (PostgreSQL) |
 
 ## Repository structure
 
 ```
 apps/
-  web/        React frontend
   api/        NestJS backend
+  web/        React frontend
 packages/
-  shared/     Zod schemas, types and enums shared by web and api
   config/     Shared ESLint, TypeScript and Prettier config
+  shared/     Zod schemas, types and enums shared by web and api
 ```
 
 ## Architecture
@@ -46,9 +46,18 @@ packages/
 
 ## Branching and deployment
 
-- `develop` - integration branch. Feature branches (`feature/*`) are merged here through pull requests.
-- `main` - production. Merging `develop` into `main` runs database migrations and deploys the affected apps.
+- `develop` — integration branch. Feature branches (`feature/*`) are merged here through pull requests.
+- `main` — production. Merging `develop` into `main` runs database migrations and deploys the affected apps.
 - Every pull request runs lint, type checking, tests and build.
+
+## Documentation
+
+The project follows **Spec-Driven Development**: every feature is specified before it is built.
+
+- [Product vision](docs/product/vision.md) and [requirements](docs/product/requirements.md)
+- [Architecture](docs/architecture/overview.md) and [data model](docs/architecture/database.md)
+- [Architecture decisions (ADRs)](docs/decisions/README.md)
+- [Feature specs and roadmap](docs/specs/README.md)
 
 ## Getting started
 
