@@ -15,7 +15,7 @@
 | Web (static SPA) | Render static site | Build `apps/web`, publish `apps/web/dist`. Rewrite rule `/*` → `/index.html` so client-side routes work. |
 | API | Render free web service | Sleeps after ~15 min idle; first request takes ~1 min. 750 free hours/month. |
 | Database | Neon (free) | 0.5 GB per project, scales to zero, PostGIS supported, DB branches for develop/prod. Render's free Postgres is not used because it expires after 30 days. |
-| Images | Cloudflare R2 or Cloudinary | Free tier; direct uploads with signed URLs. |
+| Images | Cloudflare R2 | Free tier (10 GB, free egress). Private bucket; uploads and reads with presigned URLs ([ADR 0010](../decisions/0010-image-storage-r2.md)). |
 
 Moving to paid hosting is decided when the project has real users.
 

@@ -33,7 +33,7 @@ Scope for now: **API only**, with Jest + Supertest ([ADR 0008](../decisions/0008
 
 - Arrange / Act / Assert; one behavior per test.
 - Test data through small factories (`buildUser()`, `buildAppointment()`), not shared fixtures.
-- No calls to real external services in tests (Google, image storage): use fakes.
+- No calls to real external services in tests (Google, Georef, image storage): use fakes.
 
 ## CI
 

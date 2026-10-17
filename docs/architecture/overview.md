@@ -27,7 +27,8 @@ flowchart LR
 | Styling | Tailwind CSS + shadcn/ui | — |
 | Auth | Google OAuth (Passport) + JWT access/refresh in httpOnly cookies | [0006](../decisions/0006-auth-google-jwt-cookies.md) |
 | Real time | Socket.IO through a NestJS gateway | — |
-| Images | Cloudflare R2 or Cloudinary, uploaded directly with signed URLs | — |
+| Images | Cloudflare R2 (private bucket), compressed in the browser, uploaded and read with presigned URLs | [0010](../decisions/0010-image-storage-r2.md) |
+| Geocoding | Georef (Argentine government API), called from the API | [0009](../decisions/0009-geocoding-georef.md) |
 | API docs | Swagger / OpenAPI (`@nestjs/swagger`) | — |
 | Logging | pino | — |
 | Hosting | Render (web static site + api), Neon (database) | [0005](../decisions/0005-free-tier-hosting.md) |
@@ -122,5 +123,4 @@ apps/web/src/
 
 ## Open questions
 
-- Geocoding addresses into coordinates: Google Places Autocomplete (free monthly credit) vs. Nominatim/OpenStreetMap (free, strict usage policy). Needed for onboarding (`FR-AUTH-03`).
-- Image storage provider: Cloudflare R2 vs. Cloudinary.
+None for now.
