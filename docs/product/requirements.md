@@ -25,7 +25,7 @@ Priority: **P1** = MVP, **P2** = after MVP.
 | FR-SRCH-02 | Filter by category. | P1 |
 | FR-SRCH-03 | Filter / sort by rating. | P1 |
 | FR-SRCH-04 | Filter / sort by distance to one of the client's addresses. Distance is measured to the professional's base address. The client picks the maximum distance from 1, 5, 10, 25 or 50 km; the default is 10 km. | P1 |
-| FR-SRCH-05 | Search by professional first or last name. | P1 |
+| FR-SRCH-05 | Search by professional first or last name. The name filter applies only when the trimmed text has at least 2 characters; below that, results use the other filters only. The backend enforces the same minimum. The request is sent 300 ms after the user stops typing (debounce). | P1 |
 | FR-SRCH-06 | Results are paginated (infinite scroll). | P1 |
 
 ### Professional profile (`PROF`)

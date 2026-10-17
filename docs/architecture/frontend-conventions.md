@@ -21,9 +21,19 @@ Rules:
 - Mutations invalidate or update the related queries.
 - Real-time events (Socket.IO) update the query cache with `queryClient.setQueryData`.
 
+## Text search inputs
+
+Applies to any text input that drives a query (e.g. `FR-SRCH-05`).
+
+- The input shows what the user types immediately; the query key and the URL use the debounced value (300 ms).
+- Trim the value before checking the minimum length. Below the minimum, leave the text param out of the query instead of returning an empty list.
+- Write the debounced value to the URL with `setSearchParams(params, { replace: true })` so typing does not add one history entry per keystroke.
+- Use `placeholderData: keepPreviousData` so the current results stay visible while the results for the new text load.
+- Pass the query function's `signal` to the HTTP client so a newer search cancels the previous request and a slow response never overwrites a newer one.
+
 ## API access
 
-- One HTTP client in `lib/api.ts` (`fetch` wrapper with `credentials: 'include'`).
+- One HTTP client in `lib/api.ts` (`fetch` wrapper with `credentials: 'include'`). It accepts an optional `AbortSignal` and forwards it to `fetch`.
 - Response types come from `@sm/shared`; never redefine them in the web app.
 - API error `code` values map to Spanish messages in one place.
 
