@@ -1,0 +1,181 @@
+# 000. Monorepo setup — Plan
+
+- **Status:** Draft
+- **Spec:** [spec.md](spec.md)
+
+## Constitution check
+
+| Principle | Complies? | Notes |
+|---|---|---|
+| I. Spec first | ✅ | This plan |
+| II. One contract, shared | ✅ | Creates `@sm/shared`, consumed by api and web |
+| III. The backend enforces the rules | N/A | No business rules yet |
+| IV. Business rules are tested | N/A | No business rules yet; Jest comes with the Nest app |
+| V. History is never lost | N/A | No data yet |
+| VI. Secure and private by default | ✅ | `.env` ignored, only `.env.example` versioned |
+| VII. Simplicity first | ✅ | Each tool is justified in ADR 0001 |
+| VIII. Zero cost until there are users | ✅ | Local tooling only |
+| IX. Docs travel with code | ✅ | T10 updates README and CLAUDE.md |
+
+## Approach
+
+pnpm workspaces + Turborepo at the root. NestJS and Vite apps generated with their CLIs, renamed to the `@sm/` scope and installed from the root (single lockfile). `@sm/shared` compiled with tsup to CJS + ESM + `.d.ts`.
+
+## Prerequisites
+
+- Node 24 LTS (`.nvmrc` with `24`).
+- pnpm through Corepack (`corepack enable`).
+- Docker Desktop.
+
+## Root files
+
+`package.json`:
+
+```json
+{
+  "name": "services-marketplace",
+  "private": true,
+  "packageManager": "pnpm@<version from pnpm -v>",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "format": "prettier --write ."
+  }
+}
+```
+
+`pnpm-workspace.yaml`:
+
+```yaml
+packages:
+  - "apps/*"
+  - "packages/*"
+```
+
+`turbo.json`:
+
+```json
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "tasks": {
+    "build": { "dependsOn": ["^build"], "outputs": ["dist/**"] },
+    "dev": { "dependsOn": ["^build"], "cache": false, "persistent": true },
+    "typecheck": { "dependsOn": ["^build"] },
+    "lint": {},
+    "test": { "dependsOn": ["^build"] }
+  }
+}
+```
+
+`^build` = build the packages I depend on first, so `@sm/shared` is compiled before `api` and `web` start.
+
+## apps/api
+
+```bash
+cd apps && pnpm dlx @nestjs/cli new api --package-manager pnpm --skip-git --skip-install --strict
+```
+
+- `name` → `@sm/api`; scripts `dev: nest start --watch`, `typecheck: tsc --noEmit`.
+- Delete `apps/api/.gitignore` (root covers it).
+- `apps/api/.env.example` with `DATABASE_URL=postgresql://postgres:postgres@localhost:5432/services_marketplace`.
+
+## apps/web
+
+```bash
+cd apps && pnpm create vite@latest web --template react-ts
+```
+
+- `name` → `@sm/web`; script `typecheck: tsc -b`.
+- Tailwind CSS (Vite plugin) and shadcn/ui init with the `@/` path alias; add the `Button` component.
+
+## packages/shared
+
+`package.json`:
+
+```json
+{
+  "name": "@sm/shared",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "typecheck": "tsc --noEmit"
+  }
+}
+```
+
+`tsconfig.json`: `target ES2022`, `module ESNext`, `moduleResolution Bundler`, `strict`, `declaration`, `skipLibCheck`, `include: ["src"]`.
+
+First real content, `src/index.ts`:
+
+```ts
+import { z } from 'zod';
+
+export const APPOINTMENT_STATUS = ['pending', 'accepted', 'rejected', 'cancelled', 'completed'] as const;
+export const appointmentStatusSchema = z.enum(APPOINTMENT_STATUS);
+export type AppointmentStatus = z.infer<typeof appointmentStatusSchema>;
+```
+
+Dependencies: `zod`; dev `tsup`, `typescript`. Linked into apps with `pnpm --filter @sm/api add @sm/shared@workspace:*` (same for web).
+
+## packages/config
+
+Shared `tsconfig.base.json`, ESLint flat config and Prettier config consumed by the three packages.
+
+## Local database
+
+`docker-compose.yml`:
+
+```yaml
+services:
+  db:
+    image: postgis/postgis:17-3.5
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: services_marketplace
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
+```
+
+On Apple Silicon the image runs emulated (slower, works).
+
+## Quality tooling
+
+- ESLint (flat config) + Prettier.
+- Husky `pre-commit` → lint-staged; `commit-msg` → commitlint with `@commitlint/config-conventional`.
+
+## Testing
+
+| Criterion | How it's verified |
+|---|---|
+| AC-1, AC-2 | Manual: `pnpm dev`, both apps show the statuses from `@sm/shared` |
+| AC-3 | Manual: `docker compose exec db psql … -c "SELECT postgis_version();"` |
+| AC-4 | `pnpm turbo run lint typecheck build` green |
+| AC-5, AC-6 | Manual: bad commit message rejected; badly formatted file fixed on commit |
+| AC-7 | Manual: page renders a styled shadcn `Button` |
+| AC-8 | Review of the PR diff |
+
+## Risks and alternatives
+
+- Nest CLI may create its own lockfile or git repo → mitigated with `--skip-install --skip-git`.
+- ESM/CJS mismatch when importing `@sm/shared` from Nest → mitigated by dual build with tsup.
