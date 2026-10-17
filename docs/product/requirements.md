@@ -12,10 +12,11 @@ Priority: **P1** = MVP, **P2** = after MVP.
 |---|---|---|
 | FR-AUTH-01 | A user signs in with Google. | P1 |
 | FR-AUTH-02 | On first sign-in, the user is asked whether they offer services ("¿Sos profesional?") and completes onboarding accordingly. | P1 |
-| FR-AUTH-03 | Client onboarding collects first name, last name, address, phone and photo (photo prefilled from Google). | P1 |
+| FR-AUTH-03 | Client onboarding collects first name, last name, address, phone (required, Argentine number with area code) and photo (prefilled from Google, can be replaced). | P1 |
 | FR-AUTH-04 | Professional onboarding collects the client data plus base address (where they work from, prefilled with the onboarding address), categories (one or more), weekly availability, license number (required for categories that need one) and optional bio. | P1 |
 | FR-AUTH-05 | A user can sign out from Settings. | P1 |
 | FR-AUTH-06 | A client can later become a professional by completing the professional profile. | P2 |
+| FR-AUTH-07 | Onboarding requires accepting the Terms and Conditions and the Privacy Policy (Ley 25.326) with a single checkbox. The accepted version and date are stored. | P1 |
 
 ### Search and discovery (`SRCH`)
 
