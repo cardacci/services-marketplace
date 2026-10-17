@@ -24,7 +24,7 @@ Every feature depends on this structure. Validating early that `@sm/shared` is c
 - **AC-1** — Given a fresh clone, when I run `pnpm install` and `pnpm dev`, then the API answers on `http://localhost:3000` and the web app on `http://localhost:5173`.
 - **AC-2** — Given a constant exported from `@sm/shared`, when it is imported in both `apps/api` and `apps/web`, then both compile and show its value at runtime.
 - **AC-3** — Given `docker compose up -d`, when I run `SELECT postgis_version();` against the local database, then it returns a version.
-- **AC-4** — When I run `pnpm lint`, `pnpm typecheck` and `pnpm build` from the root, then they run across all packages and pass.
+- **AC-4** — When I run `pnpm lint`, `pnpm typecheck`, `pnpm test` and `pnpm build` from the root, then they run across all packages and pass.
 - **AC-5** — Given a commit message that does not follow Conventional Commits, when I commit, then the commit is rejected.
 - **AC-6** — Given staged files with formatting issues, when I commit, then they are formatted/linted automatically.
 - **AC-7** — Given the web app, when it renders, then Tailwind classes apply and at least one shadcn/ui component (`Button`) is available.
@@ -38,4 +38,4 @@ Every feature depends on this structure. Validating early that `@sm/shared` is c
 
 ## Open questions
 
-- None.
+None for now.

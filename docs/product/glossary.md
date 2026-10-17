@@ -18,3 +18,6 @@ Use these terms consistently in docs, code and UI. Code uses the English term; U
 | Reviewer / Reviewee | — | The user who writes a review / the user being reviewed. |
 | Favorite | Favorito | A professional saved by a client. |
 | Notification | Notificación | In-app message about an event (appointment accepted, new message…). |
+| Settings | Configuración | Screen opened from the avatar: personal data, addresses and sign out. |
+| Terms and Conditions | Términos y Condiciones | Rules for using the app, accepted during onboarding. |
+| Privacy Policy | Política de Privacidad | How personal data is collected and used (Ley 25.326), accepted together with the Terms and Conditions. |

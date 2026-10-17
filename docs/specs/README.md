@@ -26,7 +26,7 @@ With Claude Code: `/spec <feature>` → `/plan <NNN>` → `/tasks <NNN>` → `/i
 | [000](000-monorepo-setup/) | Monorepo setup | NFR-07, NFR-09 | Draft | Draft | 0/10 |
 | 001 | CI/CD and first deploy | NFR-06, NFR-07 | — | — | — |
 | 002 | Database schema, migrations and seed | NFR-04, BR-02, BR-11 | — | — | — |
-| [003](003-auth-onboarding/) | Authentication and onboarding | FR-AUTH-01..05, FR-AUTH-07, BR-01, BR-05, BR-06, BR-10, NFR-03 | Draft | — | — |
+| [003](003-auth-onboarding/) | Authentication and onboarding | FR-AUTH-01..05, FR-AUTH-07, FR-SET-03 (partial), BR-01, BR-05, BR-06, BR-10, NFR-03 | Draft | — | — |
 | 004 | Professional profile and availability | FR-PROF-*, BR-05, BR-06, BR-10, BR-17 | — | — | — |
 | 005 | Search and discovery | FR-SRCH-*, BR-17, NFR-04, NFR-05 | — | — | — |
 | 006 | Appointments | FR-APPT-*, BR-02..04, BR-07, BR-13..15 | — | — | — |

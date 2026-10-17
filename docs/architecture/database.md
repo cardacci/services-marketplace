@@ -32,8 +32,8 @@ erDiagram
     uuid id PK
     text email UK
     text google_id UK "nullable"
-    text first_name
-    text last_name
+    text first_name "nullable"
+    text last_name "nullable"
     text phone "nullable"
     text avatar_key "nullable"
     text terms_version "nullable"
@@ -155,7 +155,7 @@ erDiagram
 ### users
 Every person in the system. `google_id` is nullable so other login methods can be added without schema changes. Soft deleted with `deleted_at`.
 
-The row is created at the first Google sign-in with email, Google id and name; `phone`, `terms_version` and `terms_accepted_at` stay null until onboarding is submitted, and are all written in the same transaction. **`terms_accepted_at IS NOT NULL` means onboarding is complete** (`FR-AUTH-07`); there is no separate flag. `terms_version` stores the version of the Terms and Conditions and Privacy Policy that was accepted, so a future change can ask users to accept again. `phone` is stored in the single normalized format defined by the phone schema in `@sm/shared`.
+The row is created at the first Google sign-in with email, Google id and whatever name Google returns. Google may omit the family name, so `first_name` and `last_name` are nullable until onboarding; onboarding writes the names the user confirmed, together with `phone`, `terms_version` and `terms_accepted_at`, in the same transaction. A CHECK guarantees that a user with completed onboarding has first name, last name and phone. **`terms_accepted_at IS NOT NULL` means onboarding is complete** (`FR-AUTH-07`); there is no separate flag. `terms_version` stores the version of the Terms and Conditions and Privacy Policy that was accepted, so a future change can ask users to accept again. `phone` is stored in the single normalized format defined by the phone schema in `@sm/shared`.
 
 `avatar_key` is the R2 object key of the profile photo, not a URL: reads go through presigned URLs (ADR 0010). On onboarding submit, the photo the user kept is stored in R2: either the one they uploaded or a copy of the Google photo, so the app never depends on Google's photo URLs, which can change.
 
@@ -203,6 +203,7 @@ Added by hand in the migration SQL.
 | availability_rules | `CHECK (weekday BETWEEN 1 AND 7)` |
 | properties | `CHECK (number BETWEEN 1 AND 99999)` |
 | users | `CHECK ((terms_accepted_at IS NULL) = (terms_version IS NULL))` |
+| users | `CHECK (terms_accepted_at IS NULL OR (first_name IS NOT NULL AND last_name IS NOT NULL AND phone IS NOT NULL))` |
 | appointments | `CHECK (client_id <> professional_id)` (`BR-02`) |
 | reviews | `CHECK (rating BETWEEN 1 AND 5)` |
 | reviews | `CHECK (reviewer_id <> reviewee_id)` |

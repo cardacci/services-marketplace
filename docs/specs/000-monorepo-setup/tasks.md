@@ -20,6 +20,6 @@ Branch: `feature/monorepo-setup` from `develop`.
 ## Definition of done
 
 - [ ] All acceptance criteria verified.
-- [ ] `pnpm turbo run lint typecheck build` green.
+- [ ] `pnpm turbo run lint typecheck test build` green.
 - [ ] Spec and plan status set to `Implemented`; roadmap updated.
 - [ ] PR to `develop` merged with squash.

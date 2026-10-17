@@ -35,6 +35,7 @@ flowchart LR
 
 ### Professional data
 - First name, last name, address, phone, photo.
+- Base address (where they work from, prefilled with the address).
 - Categories (multiple): gas fitter, plumber, electrician, painter, carpenter, roofer.
 - Available days and hours (default Mon–Fri 08:00–16:00, editable per day).
 - License number (required for gas fitters).
