@@ -55,7 +55,6 @@ erDiagram
     uuid user_id PK, FK
     text bio
     geography base_location "Point 4326"
-    int service_radius_km
     text license_number
     timestamptz license_verified_at
     numeric rating_avg
@@ -88,7 +87,7 @@ erDiagram
     uuid category_id FK
     uuid property_id FK
     timestamptz scheduled_at
-    int estimated_duration_min "nullable"
+    int duration_min "default 60"
     text description
     appointment_status status
     uuid cancelled_by FK "nullable"
@@ -155,7 +154,7 @@ Every person in the system. `google_id` is nullable so other login methods can b
 Addresses of a client where jobs happen. The address entered during onboarding becomes the first property. Soft deleted so old appointments keep pointing to a valid row (`BR-11`).
 
 ### professional_profiles
-1:1 with `users`; its primary key **is** `user_id`, so "professional id" and "user id" are the same value. `rating_avg` and `rating_count` are denormalized and updated in the same transaction that inserts a review. `timezone` defaults to `America/Argentina/Buenos_Aires`. `license_verified_at` not null ⇒ show the check badge.
+1:1 with `users`; its primary key **is** `user_id`, so "professional id" and "user id" are the same value. `rating_avg` and `rating_count` are denormalized and updated in the same transaction that inserts a review. `timezone` defaults to `America/Argentina/Buenos_Aires`. `base_location` is the professional's base address; proximity search measures the distance from it to the client's property (`FR-SRCH-04`). `license_verified_at` not null ⇒ show the check badge (P2; in Phase 1 the license number is only stored and this column stays null).
 
 ### categories / professional_categories
 N:M between professionals and categories. `requires_license = true` for gas fitters (`BR-10`). Seeded: gas fitter, plumber, electrician, painter, carpenter, roofer.
@@ -166,7 +165,7 @@ When a professional stops offering a category, its `professional_categories` row
 One row per time range per weekday (`BR-06`). Default rows created with the profile: weekdays 1–5, 08:00–16:00 (`BR-05`). Split shifts = two rows on the same weekday. The default lives as a constant in `@sm/shared`, not as a DB default. Future: `availability_exceptions (professional_id, date, start_time NULL, end_time NULL)` for holidays.
 
 ### appointments
-`status` enum: `pending | accepted | rejected | cancelled | completed` (transitions in `BR-03`). `cancelled_by` records who cancelled. `category_id` is required and records which service was requested, since a professional can offer several categories. On creation the service checks that the professional currently offers that category; afterwards the appointment keeps it even if the professional stops offering it.
+`status` enum: `pending | accepted | rejected | cancelled | completed` (transitions in `BR-03`). `cancelled_by` records who cancelled. `duration_min` defaults to 60 and the professional can change it only while the appointment is `pending`; end time = `scheduled_at + duration_min` (`BR-14`), and an `accepted` appointment becomes `completed` when it is reached (`BR-15`). `category_id` is required and records which service was requested, since a professional can offer several categories. On creation the service checks that the professional currently offers that category; afterwards the appointment keeps it even if the professional stops offering it.
 
 ### appointment_images / review_images
 Max 3 per parent (`BR-07`), validated in the service. `position` keeps order and is unique per parent.
