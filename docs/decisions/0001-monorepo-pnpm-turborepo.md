@@ -5,7 +5,7 @@
 
 ## Context
 
-The project has a React frontend and a NestJS backend developed by one person. Both need the same types and validation schemas, and the developer wants frontend and backend in one repository.
+The project has a React frontend and a NestJS backend that need the same types and validation schemas. Most features cross both sides (a new field touches the schema, the endpoint and the form), so they should change, be reviewed and ship together without publishing packages between repositories.
 
 ## Decision
 
@@ -18,7 +18,7 @@ A single repository with pnpm workspaces and Turborepo:
 ## Alternatives considered
 
 - **Two repositories** — duplicated types and harder coordinated changes.
-- **Nx** — more powerful but heavier to learn and configure for a project this size.
+- **Nx** — more powerful (generators, dependency graph rules), but adds its own configuration and plugin layer that two apps and two packages don't need; Turborepo only adds caching and task ordering on top of pnpm workspaces.
 - **npm/yarn workspaces** — pnpm is faster, stricter with dependencies and widely used.
 
 ## Consequences
