@@ -29,14 +29,18 @@ flowchart LR
 - "¿Sos profesional?" → client or professional onboarding. → `FR-AUTH-02`
 
 ### Client data
-- First name, last name, address, phone, photo. → `FR-AUTH-03`
+- First name, last name, address, phone (required, Argentine with area code), photo (prefilled from Google, replaceable).
+- Accept the Terms and Conditions and the Privacy Policy.
+→ `FR-AUTH-03`, `FR-AUTH-07`
 
 ### Professional data
 - First name, last name, address, phone, photo.
+- Base address (where they work from, prefilled with the address).
 - Categories (multiple): gas fitter, plumber, electrician, painter, carpenter, roofer.
 - Available days and hours (default Mon–Fri 08:00–16:00, editable per day).
 - License number (required for gas fitters).
-→ `FR-AUTH-04`, `BR-05`, `BR-10`
+- Accept the Terms and Conditions and the Privacy Policy.
+→ `FR-AUTH-04`, `FR-AUTH-07`, `BR-05`, `BR-10`
 
 ### Home (client)
 - List of professionals.
