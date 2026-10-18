@@ -27,6 +27,11 @@ pnpm workspaces + Turborepo at the root. NestJS and Vite apps generated with the
 - pnpm through Corepack (`corepack enable`).
 - Docker Desktop.
 
+## Versions
+
+- **TypeScript is pinned to `~6.0` in every package.** TypeScript 7 (the native Go compiler) doesn't ship the JavaScript compiler API yet, and the toolchain needs it: tsup generates `.d.ts` files through it, typescript-eslint's type-aware rules use it, and so does the Nest CLI. Revisit when those tools support TypeScript 7.
+- **pnpm blocks dependency build scripts by default.** Allowed ones are listed under `allowBuilds` in `pnpm-workspace.yaml` (`pnpm approve-builds <package>`). Only add a package after checking why it needs a script; `esbuild` (used by tsup) downloads its platform binary.
+
 ## Root files
 
 `package.json`:

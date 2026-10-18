@@ -17,6 +17,7 @@ flowchart LR
 | Layer | Choice | ADR |
 |---|---|---|
 | Repository | pnpm workspaces + Turborepo monorepo | [0001](../decisions/0001-monorepo-pnpm-turborepo.md) |
+| Language | TypeScript `~6.0` (strict); TypeScript 7 lacks the compiler API the toolchain needs | — |
 | Backend | NestJS (modular monolith) | [0002](../decisions/0002-nestjs-prisma-postgresql.md) |
 | ORM | Prisma (raw SQL for PostGIS queries) | [0002](../decisions/0002-nestjs-prisma-postgresql.md) |
 | Database | PostgreSQL + PostGIS | [0002](../decisions/0002-nestjs-prisma-postgresql.md) |
