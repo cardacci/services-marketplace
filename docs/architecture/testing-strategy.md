@@ -25,7 +25,7 @@ Scope for now: **API only**, with Jest + Supertest ([ADR 0008](../decisions/0008
 
 ## Test database
 
-- Local: a separate database (`services_marketplace_test`) in the same `docker-compose` Postgres + PostGIS container, configured through `apps/api/.env.test`.
+- Local: a separate database (`services_marketplace_test`) in the same `docker-compose` Postgres + PostGIS container, created by `docker/postgres-init/20-create-test-db.sql` on the first start and configured through `apps/api/.env.test` (keys in `.env.test.example`). Each database has its own tables and data, so truncating test tables never touches development data.
 - CI: a `postgis/postgis` service container in the GitHub Actions job.
 - Migrations are applied before the e2e suite; tables are truncated between test files.
 
