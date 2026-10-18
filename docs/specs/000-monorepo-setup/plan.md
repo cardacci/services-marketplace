@@ -10,7 +10,7 @@
 | I. Spec first | ✅ | This plan |
 | II. One contract, shared | ✅ | Creates `@sm/shared`, consumed by api and web |
 | III. The backend enforces the rules | N/A | No business rules yet |
-| IV. Business rules are tested | N/A | No business rules yet; Jest comes with the Nest app |
+| IV. Business rules are tested | N/A | No business rules yet; Vitest comes with the Nest app (ADR 0011) |
 | V. History is never lost | N/A | No data yet |
 | VI. Secure and private by default | ✅ | `.env` ignored, only `.env.example` versioned |
 | VII. Simplicity first | ✅ | Each tool is justified in ADR 0001 |
@@ -83,8 +83,12 @@ packages:
 cd apps && pnpm dlx @nestjs/cli new api --package-manager pnpm --skip-git --skip-install --strict
 ```
 
-- `name` → `@sm/api`; scripts `dev: nest start --watch`, `typecheck: tsc --noEmit`.
-- Delete `apps/api/.gitignore` (root covers it).
+NestJS 12 generates an ES module project (`"type": "module"`, `nodenext`) with Vitest (ADR 0011) and oxlint. Adjust it:
+
+- `name` → `@sm/api`; scripts `dev: nest start --watch`, `typecheck: tsc --noEmit`; TypeScript pinned to `~6.0`.
+- Remove what the monorepo handles elsewhere: `.oxlintrc.json`, `oxlint` and `oxlint-tsgolint` (ESLint comes from `@sm/config` in T7, `code-style.md`), `.prettierrc` and the `format` script (root Prettier config), `.gitattributes` (root file).
+- Remove `@nestjs/mau` and the `deploy` script (Nest's paid hosting; we deploy to Render, ADR 0005).
+- If the generator creates `apps/api/.gitignore`, delete it (root covers it).
 - `apps/api/.env.example` and `apps/api/.env.test.example` with the `DATABASE_URL` of each database (see Local database).
 
 ## apps/web
