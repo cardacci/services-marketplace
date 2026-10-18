@@ -40,7 +40,8 @@ flowchart LR
 .
 ├── CLAUDE.md
 ├── README.md
-├── docker-compose.yml         # local Postgres + PostGIS
+├── docker-compose.yml         # local Postgres + PostGIS (dev and test databases)
+├── docker/postgres-init/      # init script that creates the test database
 ├── turbo.json
 ├── pnpm-workspace.yaml
 ├── .claude/commands/          # SDD slash commands for Claude Code
