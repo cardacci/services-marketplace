@@ -94,10 +94,13 @@ NestJS 12 generates an ES module project (`"type": "module"`, `nodenext`) with V
 ## apps/web
 
 ```bash
-cd apps && pnpm create vite@latest web --template react-ts
+cd apps && pnpm create vite@latest web --template react-ts --no-interactive
 ```
 
-- `name` → `@sm/web`; script `typecheck: tsc -b`.
+- `name` → `@sm/web`; script `typecheck: tsc -b`; TypeScript pinned to `~6.0`.
+- Add `"strict": true` to `tsconfig.app.json` and `tsconfig.node.json`: the Vite template doesn't enable it, and `CLAUDE.md` requires strict mode.
+- Same cleanup as the API: remove `.oxlintrc.json` and `oxlint` (ESLint comes in T7) and `.gitignore` (root covers it).
+- Remove the demo (`App.css`, `index.css`, `src/assets/`, `public/icons.svg`, README); `index.html` gets `lang="es-AR"` and the product title.
 - Tailwind CSS (Vite plugin) and shadcn/ui init with the `@/` path alias; add the `Button` component.
 
 ## packages/shared
