@@ -1,6 +1,6 @@
 # 000. Monorepo setup — Plan
 
-- **Status:** Draft
+- **Status:** Approved
 - **Spec:** [spec.md](spec.md)
 
 ## Constitution check
@@ -134,7 +134,29 @@ Dependencies: `zod`; dev `tsup`, `typescript`. Linked into apps with `pnpm --fil
 
 ## packages/config
 
-Shared `tsconfig.base.json`, ESLint flat config and Prettier config consumed by the three packages.
+Shared `tsconfig.base.json`, ESLint flat config and Prettier config consumed by the three packages, following [`code-style.md`](../../architecture/code-style.md).
+
+`prettier.config.js`:
+
+```js
+export default {
+	arrowParens: 'always',
+	endOfLine: 'lf',
+	printWidth: 100,
+	semi: true,
+	singleQuote: true,
+	trailingComma: 'all',
+	useTabs: true,
+};
+```
+
+ESLint flat config:
+
+- `typescript-eslint` strict, type-aware rules, and `eslint-config-prettier` last so formatting is left to Prettier.
+- `eslint-plugin-perfectionist` with `type: 'alphabetical'` for `sort-imports` (groups from `code-style.md`, `@sm/` and `@/` as internal), `sort-named-imports`, `sort-named-exports`, `sort-exports`, `sort-objects`, `sort-interfaces`, `sort-object-types`, `sort-union-types`, `sort-jsx-props` and `sort-classes`. Exact option names follow the installed plugin version.
+- A `react` variant for `apps/web` that adds `eslint-plugin-react-hooks`.
+
+Each app's `eslint.config.js` imports the base or the `react` variant. After adding the config, run `pnpm lint --fix` once so the generated Nest and Vite code follows the ordering rules.
 
 ## Local database
 

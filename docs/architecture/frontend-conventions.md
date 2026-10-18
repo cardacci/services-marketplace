@@ -49,9 +49,144 @@ Applies to any text input that drives a query (e.g. `FR-SRCH-05`).
 - UI copy in Spanish (Argentina), using the terms in `docs/product/glossary.md`.
 - Accessible by default: labels on inputs, keyboard navigation, visible focus.
 
+## Component structure
+
+Every component follows the same section order, so anyone can find what they need: types at the top, state in the middle, rendering at the bottom. Everything a section depends on is defined above it. Sections a component doesn't need are omitted. Inside each section, the alphabetical rule from [`code-style.md`](code-style.md#alphabetical-ordering) applies.
+
+```tsx
+/* ===== Imports ===== */
+// Groups as in code-style.md: external → @sm/shared → stores → hooks → components → types → utils
+
+/* ===== Constants ===== */
+// Module-level constants and `as const` objects (no TS enums)
+
+/* ===== Types & Interfaces ===== */
+// Types and interfaces, properties sorted; the Props interface always last
+
+/* ===== Component Function ===== */
+// Signature + destructured props (sorted) with defaults
+
+/* ===== Stores ===== */
+// Zustand selectors, sorted by the state key they read
+
+/* ===== Queries ===== */
+// TanStack Query hooks (useXQuery / useXMutation), sorted by hook name
+
+/* ===== Hooks ===== */
+// Other custom and library hooks (useForm, useSearchParams, useDebounce…), sorted by hook name
+
+/* ===== State ===== */
+// useState, sorted by variable name
+
+/* ===== Refs ===== */
+// useRef, sorted
+
+/* ===== Memos ===== */
+// useMemo, sorted; only for costly values or props of memoized children
+
+/* ===== Derived Values ===== */
+// Plain consts computed from props/state, sorted
+
+/* ===== Functions ===== */
+// get[Value] for data, render[Content] for JSX fragments, sorted
+
+/* ===== Callbacks ===== */
+// useCallback, handle[Action], sorted
+
+/* ===== Effects ===== */
+// useEffect, sorted by primary action or dependency
+
+/* ===== JSX Return ===== */
+// JSX props sorted on each element
+
+/* ===== Exports ===== */
+// export default Component; then export type { … } and export { … }, sorted
+```
+
+Rules:
+
+- Types, interfaces and constants live outside the component, never inside its body.
+- Server data comes from Queries, never copied into State or Stores (see State above).
+- Complex JSX is split into `render[Name]` functions or child components.
+- Exports go at the bottom (`export default Component`), not inline on the declaration.
+
+Example:
+
+```tsx
+/* ===== Imports ===== */
+import { useCallback, useState } from 'react';
+
+import type { ProfessionalSummary } from '@sm/shared';
+
+import { useProfessionalsQuery } from '@/features/search/api/useProfessionalsQuery';
+import ProfessionalCard from '@/features/search/components/ProfessionalCard';
+
+/* ===== Types & Interfaces ===== */
+interface ProfessionalListProps {
+	categoryId: string;
+	onSelect: (professional: ProfessionalSummary) => void;
+}
+
+/* ===== Component Function ===== */
+const ProfessionalList = ({ categoryId, onSelect }: ProfessionalListProps) => {
+	/* ===== Queries ===== */
+	const { data, isPending } = useProfessionalsQuery({ categoryId });
+
+	/* ===== State ===== */
+	const [selectedId, setSelectedId] = useState<string | null>(null);
+
+	/* ===== Derived Values ===== */
+	const hasResults = (data?.items.length ?? 0) > 0;
+
+	/* ===== Callbacks ===== */
+	const handleSelect = useCallback(
+		(professional: ProfessionalSummary) => {
+			onSelect(professional);
+			setSelectedId(professional.id);
+		},
+		[onSelect],
+	);
+
+	/* ===== JSX Return ===== */
+	if (isPending) {
+		return <p>Cargando…</p>;
+	}
+
+	return (
+		<ul className="flex flex-col gap-2">
+			{hasResults ? (
+				data?.items.map((professional) => (
+					<ProfessionalCard
+						isSelected={professional.id === selectedId}
+						key={professional.id}
+						onSelect={handleSelect}
+						professional={professional}
+					/>
+				))
+			) : (
+				<p>No encontramos profesionales.</p>
+			)}
+		</ul>
+	);
+};
+
+/* ===== Exports ===== */
+export default ProfessionalList;
+export type { ProfessionalListProps };
+```
+
 ## Naming
 
 - Components: `PascalCase.tsx`, one component per file.
 - Hooks: `useSomething.ts`.
 - Query hooks: `useProfessionalsQuery`, `useAcceptAppointmentMutation`.
 - Pages: `SomethingPage.tsx` under `features/<feature>/pages/`.
+
+| Pattern | Used for | Example |
+|---|---|---|
+| `get[Value]` | Functions that compute and return a value | `getDistanceLabel()` |
+| `handle[Action]` | Event handler callbacks | `handleSubmit`, `handleSelect` |
+| `has[Condition]` | Boolean derived values (presence) | `hasResults`, `hasErrors` |
+| `is[Condition]` | Boolean derived values (state) | `isSelected`, `isPending` |
+| `on[Action]` | Props that receive callbacks | `onSelect`, `onChange` |
+| `render[Content]` | Functions that return a JSX fragment | `renderEmptyState()` |

@@ -1,6 +1,6 @@
 # 000. Monorepo setup — Spec
 
-- **Status:** Draft
+- **Status:** Approved
 - **Requirements:** NFR-07, NFR-09
 - **Related:** [ADR 0001](../../decisions/0001-monorepo-pnpm-turborepo.md), [overview](../../architecture/overview.md)
 
