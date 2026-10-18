@@ -38,7 +38,7 @@ Groups in this order, separated by a blank line, sorted alphabetically inside:
 3. App modules by kind (web): stores → API hooks and custom hooks → components → types → utils, constants and assets.
 4. Relative imports (`../`, `./`).
 
-Type-only imports use `import type`.
+Type-only imports use `import type` and stay in the group of their source (e.g. `import type { … } from '@sm/shared'` goes with the workspace packages), not in a separate types group. Perfectionist's default groups put type imports apart, so the config sets the groups explicitly.
 
 ## Enforcement (ESLint)
 
