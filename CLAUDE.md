@@ -49,7 +49,7 @@ Custom commands in `.claude/commands/`: `/spec`, `/plan`, `/tasks`, `/implement`
 - Conventional Commits (`feat:`, `fix:`, `chore:`, `docs:`, `test:`, `refactor:`).
 - Branches: `feature/*` → `develop` (squash merge) → `main` (merge commit, deploys).
 - Never commit secrets. Environment variables are documented in `.env.example` files.
-- API rules: `docs/architecture/api-conventions.md`. Frontend rules: `docs/architecture/frontend-conventions.md`.
+- Code style (formatting, alphabetical ordering, import groups): `docs/architecture/code-style.md`. API rules: `docs/architecture/api-conventions.md`. Frontend rules, including the component section order: `docs/architecture/frontend-conventions.md`.
 
 ## Commands
 

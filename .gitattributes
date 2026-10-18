@@ -1,3 +1,6 @@
+# LF everywhere, also in Windows working copies, so Prettier (endOfLine: lf) and Git agree
+* text=auto eol=lf
+
 # Scripts run inside Linux containers must keep LF line endings
 *.sh text eol=lf
 *.sql text eol=lf

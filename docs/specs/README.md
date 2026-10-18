@@ -19,11 +19,13 @@ spec.md (Draft) ──review──▶ Approved ──▶ plan.md (Draft) ──r
 
 With Claude Code: `/spec <feature>` → `/plan <NNN>` → `/tasks <NNN>` → `/implement <NNN>`.
 
+**Approval:** the developer approves specs and plans (moves them to `Approved`). The product partner can review any spec, but that review doesn't block approval. Changes that add a recurring cost still need both owners' agreement (constitution, principle VIII).
+
 ## Roadmap
 
 | # | Feature | Requirements | Spec | Plan | Tasks |
 |---|---|---|---|---|---|
-| [000](000-monorepo-setup/) | Monorepo setup | NFR-07, NFR-09 | Draft | Draft | 0/10 |
+| [000](000-monorepo-setup/) | Monorepo setup | NFR-07, NFR-09 | Approved | Approved | 0/10 |
 | 001 | CI/CD and first deploy | NFR-06, NFR-07 | — | — | — |
 | 002 | Database schema, migrations and seed | NFR-04, BR-02, BR-11 | — | — | — |
 | [003](003-auth-onboarding/) | Authentication and onboarding | FR-AUTH-01..05, FR-AUTH-07, FR-SET-03 (partial), BR-01, BR-05, BR-06, BR-10, NFR-03 | Draft | — | — |
