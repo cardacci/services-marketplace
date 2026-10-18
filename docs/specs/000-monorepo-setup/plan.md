@@ -168,7 +168,11 @@ CREATE DATABASE services_marketplace_test;
 CREATE EXTENSION IF NOT EXISTS postgis;
 ```
 
-Postgres runs the init scripts only when the data volume is empty. If the container was started before the script existed, recreate it with `docker compose down -v` (deletes local data) or run the script once with `docker compose exec -T db psql -U postgres < docker/postgres-init/20-create-test-db.sql`.
+Postgres runs the init scripts only when the data volume is empty. If the container was started before the script existed, recreate it with `docker compose down -v` (deletes local data) or run the script once with `docker compose exec db psql -U postgres -f /docker-entrypoint-initdb.d/20-create-test-db.sql` (it reads the file already mounted in the container, so it works the same in PowerShell and bash).
+
+The script must keep LF line endings: a `\r` from Windows line endings can end up inside the `\connect` argument. `.gitattributes` enforces it with `*.sql text eol=lf`.
+
+`.gitignore` ignores `.env.*` except `.env.example` and `.env.*.example`, so `.env.test.example` is versioned and `.env.test` is not.
 
 `apps/api/.env.example` and `apps/api/.env.test.example` document both connection strings:
 
