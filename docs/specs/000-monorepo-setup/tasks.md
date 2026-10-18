@@ -6,7 +6,7 @@ Branch: `feature/monorepo-setup` from `develop`.
 
 ## Tasks
 
-- [ ] **T1** — Root workspace: `.nvmrc`, `package.json`, `pnpm-workspace.yaml`, `turbo.json`, install `turbo`. _Done when:_ `pnpm turbo --version` works.
+- [x] **T1** — Root workspace: `.nvmrc`, `package.json`, `pnpm-workspace.yaml`, `turbo.json`, install `turbo`. _Done when:_ `pnpm turbo --version` works.
 - [ ] **T2** — `packages/shared` with tsup build and the appointment status schema. _Done when:_ `pnpm --filter @sm/shared build` creates `dist/index.js`, `index.mjs` and `index.d.ts`.
 - [ ] **T3** — Generate `apps/api` with Nest CLI, rename to `@sm/api`, add scripts, link `@sm/shared`. _Done when:_ `GET /` returns the statuses from `@sm/shared`.
 - [ ] **T4** — Generate `apps/web` with Vite, rename to `@sm/web`, add scripts, link `@sm/shared`. _Done when:_ the page shows the statuses from `@sm/shared`.
