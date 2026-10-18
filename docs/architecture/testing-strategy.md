@@ -1,13 +1,13 @@
 # Testing strategy
 
-Scope for now: **API only**, with Jest + Supertest ([ADR 0008](../decisions/0008-api-only-testing-first.md)).
+Scope for now: **API only**, with Vitest + Supertest ([ADR 0008](../decisions/0008-api-only-testing-first.md), [ADR 0011](../decisions/0011-vitest-test-runner.md)).
 
 ## Levels
 
 | Level | Tool | Scope | Where |
 |---|---|---|---|
-| Unit (api) | Jest | Services and business rules with mocked dependencies | `*.service.spec.ts` next to the code |
-| e2e (api) | Jest + Supertest | HTTP endpoint → service → real Postgres + PostGIS (test database) | `apps/api/test/*.e2e-spec.ts` |
+| Unit (api) | Vitest | Services and business rules with mocked dependencies | `*.service.spec.ts` next to the code |
+| e2e (api) | Vitest + Supertest | HTTP endpoint → service → real Postgres + PostGIS (test database) | `apps/api/test/*.e2e-spec.ts` |
 
 ### Later
 

@@ -11,8 +11,9 @@ One file per significant decision. Accepted ADRs are not edited (except typos or
 | [0005](0005-free-tier-hosting.md) | Free-tier hosting: Render and Neon | Accepted |
 | [0006](0006-auth-google-jwt-cookies.md) | Google OAuth with JWT in httpOnly cookies | Accepted |
 | [0007](0007-single-users-table.md) | Single users table with optional professional profile | Accepted |
-| [0008](0008-api-only-testing-first.md) | Test the API only, with Jest + Supertest, at first | Accepted |
+| [0008](0008-api-only-testing-first.md) | Test the API only, with Jest + Supertest, at first | Accepted; test runner superseded by 0011 |
 | [0009](0009-geocoding-georef.md) | Address geocoding with Georef | Accepted |
 | [0010](0010-image-storage-r2.md) | Image storage on Cloudflare R2, compressed in the browser | Accepted |
+| [0011](0011-vitest-test-runner.md) | Vitest as the test runner | Accepted |
 
 New ADR: copy [`template.md`](template.md) with the next number.

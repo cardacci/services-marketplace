@@ -33,7 +33,7 @@ flowchart LR
 | API docs | Swagger / OpenAPI (`@nestjs/swagger`) | — |
 | Logging | pino | — |
 | Hosting | Render (web static site + api), Neon (database) | [0005](../decisions/0005-free-tier-hosting.md) |
-| Testing | Jest + Supertest, API only for now | [0008](../decisions/0008-api-only-testing-first.md) |
+| Testing | Vitest + Supertest, API only for now | [0008](../decisions/0008-api-only-testing-first.md), [0011](../decisions/0011-vitest-test-runner.md) |
 
 ## Repository layout
 

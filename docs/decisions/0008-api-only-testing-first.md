@@ -1,6 +1,6 @@
 # 0008. Test the API only, with Jest + Supertest, at first
 
-- **Status:** Accepted
+- **Status:** Accepted; test runner superseded by [0011](0011-vitest-test-runner.md) (Vitest instead of Jest)
 - **Date:** 2026-10-17
 
 ## Context
