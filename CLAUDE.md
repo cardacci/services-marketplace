@@ -37,7 +37,7 @@ Custom commands in `.claude/commands/`: `/spec`, `/plan`, `/tasks`, `/implement`
 - Monorepo: pnpm workspaces + Turborepo. `apps/web` (React + TS + Vite), `apps/api` (NestJS), `packages/shared` (Zod schemas, types, enums — package `@sm/shared`).
 - Database: PostgreSQL + PostGIS via Prisma.
 - Frontend state: TanStack Query for server state, Zustand for client state. No Redux.
-- Styling: Tailwind CSS + shadcn/ui.
+- Styling: Tailwind CSS + shadcn/ui (Base UI primitives).
 - Validation: Zod schemas in `@sm/shared`, used by both web forms and API pipes.
 - Tests: Vitest + Supertest in `apps/api` only, for now. No frontend or browser E2E tests yet (see ADRs 0008 and 0011).
 - Hosting: Render (web static site + API) and Neon (PostgreSQL).
@@ -53,4 +53,15 @@ Custom commands in `.claude/commands/`: `/spec`, `/plan`, `/tasks`, `/implement`
 
 ## Commands
 
-> To be completed when the monorepo is scaffolded (spec `000-monorepo-setup`).
+Run from the repository root (Node 24, pnpm via Corepack):
+
+- `pnpm install`: install dependencies and Git hooks.
+- `docker compose up -d`: local PostgreSQL + PostGIS (`services_marketplace` and `services_marketplace_test`). Docker Desktop must be running.
+- `pnpm dev`: `@sm/shared` in watch mode, API on `:3000`, web on `:5173`.
+- `pnpm build` / `pnpm lint` / `pnpm typecheck` / `pnpm test`: run across all packages through Turborepo.
+- `pnpm --filter @sm/api test:e2e`: API e2e tests.
+- `pnpm --filter <package> <script>`: run one package's script (`@sm/api`, `@sm/web`, `@sm/shared`, `@sm/config`).
+- `pnpm format`: Prettier on the whole repo. `pnpm -r exec eslint . --fix`: ESLint autofix in every package (`pnpm lint --fix` doesn't forward `--fix`).
+- `pnpm --filter @sm/web exec shadcn add <component>`: add a shadcn/ui component.
+
+Before finishing a task, run `pnpm lint`, `pnpm typecheck`, `pnpm test` and `pnpm build` (and the e2e suite if the API changed). Commits run lint-staged and commitlint: commit message body lines must stay under 100 characters.

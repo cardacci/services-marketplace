@@ -1,6 +1,6 @@
 # 000. Monorepo setup — Plan
 
-- **Status:** Approved
+- **Status:** Implemented
 - **Spec:** [spec.md](spec.md)
 
 ## Constitution check
@@ -101,7 +101,11 @@ cd apps && pnpm create vite@latest web --template react-ts --no-interactive
 - Add `"strict": true` to `tsconfig.app.json` and `tsconfig.node.json`: the Vite template doesn't enable it, and `CLAUDE.md` requires strict mode.
 - Same cleanup as the API: remove `.oxlintrc.json` and `oxlint` (ESLint comes in T7) and `.gitignore` (root covers it).
 - Remove the demo (`App.css`, `index.css`, `src/assets/`, `public/icons.svg`, README); `index.html` gets `lang="es-AR"` and the product title.
-- Tailwind CSS (Vite plugin) and shadcn/ui init with the `@/` path alias; add the `Button` component.
+- Tailwind CSS 4 with `@tailwindcss/vite`; `@/` alias to `src/` in `vite.config.ts` and both `tsconfig.json` and `tsconfig.app.json` (the shadcn CLI reads the root one).
+- shadcn/ui: `pnpm dlx shadcn@latest init --template vite --base base --preset nova --no-monorepo --no-rtl`. Base UI as the primitive library (shadcn's current default; Radix development has slowed). The init adds `Button`, `lib/utils.ts` and the theme in `index.css`.
+- `lib/utils.ts` re-exports `cn` from the `cn` package (by shadcn, replaces `clsx` + `tailwind-merge`).
+- Build-only packages (`tailwindcss`, `@tailwindcss/vite`, `shadcn`, needed for `shadcn/tailwind.css`) go in `devDependencies`.
+- `src/components/ui/**` turns off `react-refresh/only-export-components`: shadcn components export their variants next to the component, and keeping that layout lets the CLI update them.
 
 ## packages/shared
 
@@ -227,6 +231,9 @@ On Apple Silicon the image runs emulated (slower, works).
 
 - ESLint (flat config) + Prettier.
 - Husky `pre-commit` → lint-staged; `commit-msg` → commitlint with `@commitlint/config-conventional`.
+- `pnpm exec husky init` adds the `prepare` script, so hooks install on `pnpm install`.
+- `lint-staged.config.mjs`: `*.{cjs,js,mjs,ts,tsx}` → `eslint --fix` then `prettier --write`; `*.{css,html,json,yaml,yml}` → `prettier --write`. The globs don't overlap, so no file is touched by two tasks at once.
+- ESLint runs from the root and, since ESLint 10, picks the config closest to each file, so every package keeps its own rules. A root `eslint.config.mjs` covers the root config files; the root has `eslint` as a dev dependency for the hook.
 
 ## Testing
 

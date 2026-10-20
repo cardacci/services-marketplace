@@ -61,17 +61,54 @@ The project follows **Spec-Driven Development**: every feature is specified befo
 
 ## Getting started
 
-Setup instructions will be added as the project is scaffolded.
+### Requirements
 
-Requirements:
+- **Node.js 24** (pinned in `.nvmrc`; with nvm or fnm, `nvm use` / `fnm use`).
+- **pnpm** through Corepack, which ships with Node: `corepack enable`. The exact version comes from `packageManager` in `package.json`.
+- **Docker Desktop** for the local PostgreSQL + PostGIS database.
 
-- Node.js (LTS)
-- pnpm
-- Docker (local PostgreSQL + PostGIS)
+### First run
+
+```bash
+git clone https://github.com/cardacci/services-marketplace.git
+cd services-marketplace
+corepack enable
+pnpm install                  # also installs the Git hooks (Husky)
+docker compose up -d          # PostgreSQL + PostGIS on localhost:5432
+cp apps/api/.env.example apps/api/.env
+cp apps/api/.env.test.example apps/api/.env.test
+pnpm dev
+```
+
+- API: <http://localhost:3000>
+- Web: <http://localhost:5173>
+
+`pnpm dev` builds `@sm/shared` first, then runs it in watch mode together with the API and the web app, all with hot reload.
+
+The local Docker container holds two databases: `services_marketplace` for development and `services_marketplace_test` for the e2e tests. The API starts reading `DATABASE_URL` from the `.env` files with the database spec (002).
+
+### Commands
+
+Run from the repository root:
+
+| Command | What it does |
+|---|---|
+| `pnpm dev` | Shared package (watch), API and web with hot reload |
+| `pnpm build` | Builds every package in dependency order (cached by Turborepo) |
+| `pnpm lint` | ESLint in every package |
+| `pnpm typecheck` | TypeScript checks in every package |
+| `pnpm test` | Unit tests (Vitest) |
+| `pnpm --filter @sm/api test:e2e` | API end-to-end tests (Vitest + Supertest) |
+| `pnpm format` | Formats the repository with Prettier |
+| `pnpm -r exec eslint . --fix` | Applies ESLint fixes (import and property ordering) in every package |
+| `docker compose up -d` / `docker compose stop` | Starts / stops the local database |
+
+Commits go through Git hooks: staged files are linted and formatted, and commit messages must follow [Conventional Commits](https://www.conventionalcommits.org/).
 
 ## Roadmap
 
-- [ ] Monorepo setup, CI and first deploy
+- [x] Monorepo setup
+- [ ] CI and first deploy
 - [ ] Authentication and onboarding
 - [ ] Professional profiles, categories and availability
 - [ ] Search with filters and proximity
