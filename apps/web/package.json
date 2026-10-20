@@ -6,6 +6,7 @@
 	"scripts": {
 		"build": "tsc -b && vite build",
 		"dev": "vite",
+		"lint": "eslint .",
 		"preview": "vite preview",
 		"typecheck": "tsc -b"
 	},
@@ -15,10 +16,12 @@
 		"react-dom": "^19.2.8"
 	},
 	"devDependencies": {
+		"@sm/config": "workspace:*",
 		"@types/node": "^24.13.3",
 		"@types/react": "^19.2.18",
 		"@types/react-dom": "^19.2.7",
 		"@vitejs/plugin-react": "^6.1.1",
+		"eslint": "^10.13.0",
 		"typescript": "~6.0.3",
 		"vite": "^8.3.0"
 	}

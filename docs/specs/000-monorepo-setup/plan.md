@@ -56,8 +56,8 @@ pnpm workspaces + Turborepo at the root. NestJS and Vite apps generated with the
 
 ```yaml
 packages:
-  - "apps/*"
-  - "packages/*"
+  - 'apps/*'
+  - 'packages/*'
 ```
 
 `turbo.json`:
@@ -165,10 +165,15 @@ export default {
 ESLint flat config:
 
 - `typescript-eslint` strict, type-aware rules, and `eslint-config-prettier` last so formatting is left to Prettier.
-- `eslint-plugin-perfectionist` with `type: 'alphabetical'` for `sort-imports` (groups from `code-style.md`, `@sm/` and `@/` as internal), `sort-named-imports`, `sort-named-exports`, `sort-exports`, `sort-objects`, `sort-interfaces`, `sort-object-types`, `sort-union-types`, `sort-jsx-props` and `sort-classes`. Exact option names follow the installed plugin version.
-- A `react` variant for `apps/web` that adds `eslint-plugin-react-hooks`.
+- `eslint-plugin-perfectionist` with `type: 'natural'` for `sort-imports` (groups from `code-style.md` as custom groups: `@sm/` = workspace, then `@/stores`, hooks, components, types, utils; type-only imports stay in their source group), `sort-named-imports`, `sort-named-exports`, `sort-exports`, `sort-objects`, `sort-interfaces`, `sort-object-types`, `sort-union-types`, `sort-jsx-props`, `sort-enums` and `sort-classes`.
+- `@typescript-eslint/no-extraneous-class` allows decorated classes: NestJS modules are empty classes configured by `@Module`.
+- Type-aware rules are disabled for plain `.js`/`.mjs` config files, which are outside every tsconfig.
 
-Each app's `eslint.config.js` imports the base or the `react` variant. After adding the config, run `pnpm lint --fix` once so the generated Nest and Vite code follows the ordering rules.
+`@sm/config` exports `createConfig({ react, tsconfigRootDir })` from `@sm/config/eslint`. Each package has an `eslint.config.js` that calls it with `import.meta.dirname` (`react: true` in `apps/web`). `packages/shared` uses `eslint.config.mjs` because it isn't an ES module package (its tsup output names depend on that). `turbo.json` makes `lint` depend on `^build`, since type-aware rules read `@sm/shared`'s built types.
+
+The root `prettier.config.mjs` re-exports `@sm/config/prettier`. `.prettierignore` skips the lockfile, build output and Markdown (docs keep their hand-written tables).
+
+Every package has `lint` and `typecheck` scripts, except `@sm/config`, which only has `lint`: it contains JavaScript config files and no TypeScript to check. After adding the config, run `eslint . --fix` once per package (`pnpm -r exec eslint . --fix`) so the generated Nest and Vite code follows the ordering rules.
 
 ## Local database
 
@@ -183,7 +188,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: services_marketplace
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./docker/postgres-init/20-create-test-db.sql:/docker-entrypoint-initdb.d/20-create-test-db.sql:ro

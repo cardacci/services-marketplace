@@ -16,6 +16,8 @@ Applies to every package (`apps/api`, `apps/web`, `packages/*`). Formatting and 
 
 `.gitattributes` keeps LF line endings in the working copy on Windows too, so Prettier and Git agree.
 
+Prettier formats code, JSON and YAML. Markdown is excluded (`.prettierignore`) so docs keep their hand-written layout; YAML uses spaces because the format forbids tabs.
+
 ## Alphabetical ordering
 
 Everything that can be sorted alphabetically **is** sorted alphabetically within its block:
