@@ -117,9 +117,8 @@ cd apps && pnpm create vite@latest web --template react-ts --no-interactive
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "import": { "types": "./dist/index.d.mts", "default": "./dist/index.mjs" },
+      "require": { "types": "./dist/index.d.ts", "default": "./dist/index.js" }
     }
   },
   "scripts": {
@@ -169,7 +168,7 @@ ESLint flat config:
 - `@typescript-eslint/no-extraneous-class` allows decorated classes: NestJS modules are empty classes configured by `@Module`.
 - Type-aware rules are disabled for plain `.js`/`.mjs` config files, which are outside every tsconfig.
 
-`@sm/config` exports `createConfig({ react, tsconfigRootDir })` from `@sm/config/eslint`. Each package has an `eslint.config.js` that calls it with `import.meta.dirname` (`react: true` in `apps/web`). `packages/shared` uses `eslint.config.mjs` because it isn't an ES module package (its tsup output names depend on that). `turbo.json` makes `lint` depend on `^build`, since type-aware rules read `@sm/shared`'s built types.
+`@sm/config` exports `createConfig({ react, tsconfigRootDir })` from `@sm/config/eslint`. Each package has an `eslint.config.js` that calls it with `import.meta.dirname` (`react: true` in `apps/web` adds react-hooks and react-refresh). `packages/shared` uses `eslint.config.mjs` because it isn't an ES module package (its tsup output names depend on that). `turbo.json` makes `lint` depend on `^build`, since type-aware rules read `@sm/shared`'s built types.
 
 The root `prettier.config.mjs` re-exports `@sm/config/prettier`. `.prettierignore` skips the lockfile, build output and Markdown (docs keep their hand-written tables).
 

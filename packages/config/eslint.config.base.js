@@ -2,6 +2,7 @@ import eslint from '@eslint/js';
 import prettier from 'eslint-config-prettier';
 import perfectionist from 'eslint-plugin-perfectionist';
 import reactHooks from 'eslint-plugin-react-hooks';
+import { reactRefresh } from 'eslint-plugin-react-refresh';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
@@ -89,7 +90,8 @@ export function createConfig({ react = false, tsconfigRootDir }) {
 				],
 			},
 		},
-		react ? reactHooks.configs.flat.recommended : {},
+		// Hooks rules, and react-refresh so files keep component-only exports and Vite HMR stays fast.
+		react ? [reactHooks.configs.flat.recommended, reactRefresh.configs.vite()] : [],
 		{
 			// Config files (eslint.config.js, prettier.config.js…) are plain JavaScript outside any tsconfig.
 			extends: [tseslint.configs.disableTypeChecked],

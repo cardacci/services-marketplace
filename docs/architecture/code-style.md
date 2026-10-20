@@ -48,7 +48,7 @@ Type-only imports use `import type` and stay in the group of their source (e.g. 
 
 - `typescript-eslint` (strict, type-aware) and `eslint-config-prettier`.
 - `eslint-plugin-perfectionist` (alphabetical, natural order) for imports, named imports/exports, objects, interfaces, object types, union types, JSX props and class members.
-- Web only: `eslint-plugin-react-hooks` (rules of hooks and exhaustive deps).
+- Web only: `eslint-plugin-react-hooks` (rules of hooks and exhaustive deps) and `eslint-plugin-react-refresh` (component files export only components, so Vite HMR keeps state).
 
 `pnpm lint --fix` applies the ordering automatically; lint-staged runs it on every commit.
 

@@ -5,7 +5,7 @@ import type { App } from 'supertest/types.js';
 
 import { APPOINTMENT_STATUS } from '@sm/shared';
 
-import { AppModule } from './../src/app.module.js';
+import { AppModule } from '../src/app.module.js';
 
 describe('AppController (e2e)', () => {
 	let app: INestApplication<App>;
