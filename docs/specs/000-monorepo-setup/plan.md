@@ -1,6 +1,6 @@
 # 000. Monorepo setup — Plan
 
-- **Status:** Approved
+- **Status:** Implemented
 - **Spec:** [spec.md](spec.md)
 
 ## Constitution check
