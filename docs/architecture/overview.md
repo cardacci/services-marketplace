@@ -25,7 +25,7 @@ flowchart LR
 | Frontend | React + TypeScript + Vite, React Router | — |
 | Frontend state | TanStack Query (server state) + Zustand (client state) | [0004](../decisions/0004-tanstack-query-zustand.md) |
 | Forms | React Hook Form + Zod resolver | — |
-| Styling | Tailwind CSS + shadcn/ui | — |
+| Styling | Tailwind CSS + shadcn/ui (Base UI primitives) | — |
 | Auth | Google OAuth (Passport) + JWT access/refresh in httpOnly cookies | [0006](../decisions/0006-auth-google-jwt-cookies.md) |
 | Real time | Socket.IO through a NestJS gateway | — |
 | Images | Cloudflare R2 (private bucket), compressed in the browser, uploaded and read with presigned URLs | [0010](../decisions/0010-image-storage-r2.md) |

@@ -37,7 +37,7 @@ Custom commands in `.claude/commands/`: `/spec`, `/plan`, `/tasks`, `/implement`
 - Monorepo: pnpm workspaces + Turborepo. `apps/web` (React + TS + Vite), `apps/api` (NestJS), `packages/shared` (Zod schemas, types, enums — package `@sm/shared`).
 - Database: PostgreSQL + PostGIS via Prisma.
 - Frontend state: TanStack Query for server state, Zustand for client state. No Redux.
-- Styling: Tailwind CSS + shadcn/ui.
+- Styling: Tailwind CSS + shadcn/ui (Base UI primitives).
 - Validation: Zod schemas in `@sm/shared`, used by both web forms and API pipes.
 - Tests: Vitest + Supertest in `apps/api` only, for now. No frontend or browser E2E tests yet (see ADRs 0008 and 0011).
 - Hosting: Render (web static site + API) and Neon (PostgreSQL).
