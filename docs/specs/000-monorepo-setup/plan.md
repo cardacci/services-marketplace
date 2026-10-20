@@ -231,6 +231,9 @@ On Apple Silicon the image runs emulated (slower, works).
 
 - ESLint (flat config) + Prettier.
 - Husky `pre-commit` → lint-staged; `commit-msg` → commitlint with `@commitlint/config-conventional`.
+- `pnpm exec husky init` adds the `prepare` script, so hooks install on `pnpm install`.
+- `lint-staged.config.mjs`: `*.{cjs,js,mjs,ts,tsx}` → `eslint --fix` then `prettier --write`; `*.{css,html,json,yaml,yml}` → `prettier --write`. The globs don't overlap, so no file is touched by two tasks at once.
+- ESLint runs from the root and, since ESLint 10, picks the config closest to each file, so every package keeps its own rules. A root `eslint.config.mjs` covers the root config files; the root has `eslint` as a dev dependency for the hook.
 
 ## Testing
 
