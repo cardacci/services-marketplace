@@ -1,0 +1,10 @@
+{
+	"extends": "@sm/config/tsconfig.base.json",
+	"compilerOptions": {
+		"declaration": true,
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"target": "ES2022"
+	},
+	"include": ["src"]
+}

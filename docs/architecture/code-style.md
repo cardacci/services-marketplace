@@ -16,6 +16,8 @@ Applies to every package (`apps/api`, `apps/web`, `packages/*`). Formatting and 
 
 `.gitattributes` keeps LF line endings in the working copy on Windows too, so Prettier and Git agree.
 
+Prettier formats code, JSON and YAML. Markdown is excluded (`.prettierignore`) so docs keep their hand-written layout; YAML uses spaces because the format forbids tabs.
+
 ## Alphabetical ordering
 
 Everything that can be sorted alphabetically **is** sorted alphabetically within its block:
@@ -46,9 +48,9 @@ Type-only imports use `import type` and stay in the group of their source (e.g. 
 
 - `typescript-eslint` (strict, type-aware) and `eslint-config-prettier`.
 - `eslint-plugin-perfectionist` (alphabetical, natural order) for imports, named imports/exports, objects, interfaces, object types, union types, JSX props and class members.
-- Web only: `eslint-plugin-react-hooks` (rules of hooks and exhaustive deps).
+- Web only: `eslint-plugin-react-hooks` (rules of hooks and exhaustive deps) and `eslint-plugin-react-refresh` (component files export only components, so Vite HMR keeps state).
 
-`pnpm lint --fix` applies the ordering automatically; lint-staged runs it on every commit.
+`pnpm -r exec eslint . --fix` applies the ordering automatically in every package (`pnpm lint --fix` does not work: Turborepo does not forward `--fix` to ESLint). lint-staged runs it on staged files on every commit (T9 of spec 000).
 
 ## TypeScript
 

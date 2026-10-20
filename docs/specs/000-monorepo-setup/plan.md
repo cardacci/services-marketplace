@@ -10,7 +10,7 @@
 | I. Spec first | ✅ | This plan |
 | II. One contract, shared | ✅ | Creates `@sm/shared`, consumed by api and web |
 | III. The backend enforces the rules | N/A | No business rules yet |
-| IV. Business rules are tested | N/A | No business rules yet; Jest comes with the Nest app |
+| IV. Business rules are tested | N/A | No business rules yet; Vitest comes with the Nest app (ADR 0011) |
 | V. History is never lost | N/A | No data yet |
 | VI. Secure and private by default | ✅ | `.env` ignored, only `.env.example` versioned |
 | VII. Simplicity first | ✅ | Each tool is justified in ADR 0001 |
@@ -26,6 +26,11 @@ pnpm workspaces + Turborepo at the root. NestJS and Vite apps generated with the
 - Node 24 LTS (`.nvmrc` with `24`).
 - pnpm through Corepack (`corepack enable`).
 - Docker Desktop.
+
+## Versions
+
+- **TypeScript is pinned to `~6.0` in every package.** TypeScript 7 (the native Go compiler) doesn't ship the JavaScript compiler API yet, and the toolchain needs it: tsup generates `.d.ts` files through it, typescript-eslint's type-aware rules use it, and so does the Nest CLI. Revisit when those tools support TypeScript 7.
+- **pnpm blocks dependency build scripts by default.** Allowed ones are listed under `allowBuilds` in `pnpm-workspace.yaml` (`pnpm approve-builds <package>`). Only add a package after checking why it needs a script; `esbuild` (used by tsup) downloads its platform binary.
 
 ## Root files
 
@@ -51,8 +56,8 @@ pnpm workspaces + Turborepo at the root. NestJS and Vite apps generated with the
 
 ```yaml
 packages:
-  - "apps/*"
-  - "packages/*"
+  - 'apps/*'
+  - 'packages/*'
 ```
 
 `turbo.json`:
@@ -78,17 +83,24 @@ packages:
 cd apps && pnpm dlx @nestjs/cli new api --package-manager pnpm --skip-git --skip-install --strict
 ```
 
-- `name` → `@sm/api`; scripts `dev: nest start --watch`, `typecheck: tsc --noEmit`.
-- Delete `apps/api/.gitignore` (root covers it).
+NestJS 12 generates an ES module project (`"type": "module"`, `nodenext`) with Vitest (ADR 0011) and oxlint. Adjust it:
+
+- `name` → `@sm/api`; scripts `dev: nest start --watch`, `typecheck: tsc --noEmit`; TypeScript pinned to `~6.0`.
+- Remove what the monorepo handles elsewhere: `.oxlintrc.json`, `oxlint` and `oxlint-tsgolint` (ESLint comes from `@sm/config` in T7, `code-style.md`), `.prettierrc` and the `format` script (root Prettier config), `.gitattributes` (root file).
+- Remove `@nestjs/mau` and the `deploy` script (Nest's paid hosting; we deploy to Render, ADR 0005).
+- If the generator creates `apps/api/.gitignore`, delete it (root covers it).
 - `apps/api/.env.example` and `apps/api/.env.test.example` with the `DATABASE_URL` of each database (see Local database).
 
 ## apps/web
 
 ```bash
-cd apps && pnpm create vite@latest web --template react-ts
+cd apps && pnpm create vite@latest web --template react-ts --no-interactive
 ```
 
-- `name` → `@sm/web`; script `typecheck: tsc -b`.
+- `name` → `@sm/web`; script `typecheck: tsc -b`; TypeScript pinned to `~6.0`.
+- Add `"strict": true` to `tsconfig.app.json` and `tsconfig.node.json`: the Vite template doesn't enable it, and `CLAUDE.md` requires strict mode.
+- Same cleanup as the API: remove `.oxlintrc.json` and `oxlint` (ESLint comes in T7) and `.gitignore` (root covers it).
+- Remove the demo (`App.css`, `index.css`, `src/assets/`, `public/icons.svg`, README); `index.html` gets `lang="es-AR"` and the product title.
 - Tailwind CSS (Vite plugin) and shadcn/ui init with the `@/` path alias; add the `Button` component.
 
 ## packages/shared
@@ -105,9 +117,8 @@ cd apps && pnpm create vite@latest web --template react-ts
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "import": { "types": "./dist/index.d.mts", "default": "./dist/index.mjs" },
+      "require": { "types": "./dist/index.d.ts", "default": "./dist/index.js" }
     }
   },
   "scripts": {
@@ -153,10 +164,15 @@ export default {
 ESLint flat config:
 
 - `typescript-eslint` strict, type-aware rules, and `eslint-config-prettier` last so formatting is left to Prettier.
-- `eslint-plugin-perfectionist` with `type: 'alphabetical'` for `sort-imports` (groups from `code-style.md`, `@sm/` and `@/` as internal), `sort-named-imports`, `sort-named-exports`, `sort-exports`, `sort-objects`, `sort-interfaces`, `sort-object-types`, `sort-union-types`, `sort-jsx-props` and `sort-classes`. Exact option names follow the installed plugin version.
-- A `react` variant for `apps/web` that adds `eslint-plugin-react-hooks`.
+- `eslint-plugin-perfectionist` with `type: 'natural'` for `sort-imports` (groups from `code-style.md` as custom groups: `@sm/` = workspace, then `@/stores`, hooks, components, types, utils; type-only imports stay in their source group), `sort-named-imports`, `sort-named-exports`, `sort-exports`, `sort-objects`, `sort-interfaces`, `sort-object-types`, `sort-union-types`, `sort-jsx-props`, `sort-enums` and `sort-classes`.
+- `@typescript-eslint/no-extraneous-class` allows decorated classes: NestJS modules are empty classes configured by `@Module`.
+- Type-aware rules are disabled for plain `.js`/`.mjs` config files, which are outside every tsconfig.
 
-Each app's `eslint.config.js` imports the base or the `react` variant. After adding the config, run `pnpm lint --fix` once so the generated Nest and Vite code follows the ordering rules.
+`@sm/config` exports `createConfig({ react, tsconfigRootDir })` from `@sm/config/eslint`. Each package has an `eslint.config.js` that calls it with `import.meta.dirname` (`react: true` in `apps/web` adds react-hooks and react-refresh). `packages/shared` uses `eslint.config.mjs` because it isn't an ES module package (its tsup output names depend on that). `turbo.json` makes `lint` depend on `^build`, since type-aware rules read `@sm/shared`'s built types.
+
+The root `prettier.config.mjs` re-exports `@sm/config/prettier`. `.prettierignore` skips the lockfile, build output and Markdown (docs keep their hand-written tables).
+
+Every package has `lint` and `typecheck` scripts, except `@sm/config`, which only has `lint`: it contains JavaScript config files and no TypeScript to check. After adding the config, run `eslint . --fix` once per package (`pnpm -r exec eslint . --fix`) so the generated Nest and Vite code follows the ordering rules.
 
 ## Local database
 
@@ -171,7 +187,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: services_marketplace
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./docker/postgres-init/20-create-test-db.sql:/docker-entrypoint-initdb.d/20-create-test-db.sql:ro

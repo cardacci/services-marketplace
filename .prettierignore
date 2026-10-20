@@ -1,0 +1,7 @@
+# Generated
+pnpm-lock.yaml
+**/dist/
+**/coverage/
+
+# Docs keep their hand-written layout (compact tables)
+*.md

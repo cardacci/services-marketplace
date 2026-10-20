@@ -39,7 +39,7 @@ Custom commands in `.claude/commands/`: `/spec`, `/plan`, `/tasks`, `/implement`
 - Frontend state: TanStack Query for server state, Zustand for client state. No Redux.
 - Styling: Tailwind CSS + shadcn/ui.
 - Validation: Zod schemas in `@sm/shared`, used by both web forms and API pipes.
-- Tests: Jest + Supertest in `apps/api` only, for now. No frontend or browser E2E tests yet (see ADR 0008).
+- Tests: Vitest + Supertest in `apps/api` only, for now. No frontend or browser E2E tests yet (see ADRs 0008 and 0011).
 - Hosting: Render (web static site + API) and Neon (PostgreSQL).
 
 ## Conventions

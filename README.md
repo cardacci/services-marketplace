@@ -22,7 +22,7 @@ A marketplace where clients find nearby professionals (plumbers, gas fitters, el
 | Backend | NestJS, TypeScript, Prisma, Socket.IO, Passport (Google OAuth + JWT), Swagger/OpenAPI |
 | Database | PostgreSQL + PostGIS |
 | Validation | Zod, shared between frontend and backend |
-| Testing | Jest + Supertest (API) |
+| Testing | Vitest + Supertest (API) |
 | Tooling | pnpm workspaces, Turborepo, ESLint, Prettier, Husky, Conventional Commits |
 | CI/CD | GitHub Actions |
 | Hosting | Render (web static site + API), Neon (PostgreSQL) |

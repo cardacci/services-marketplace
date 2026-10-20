@@ -17,6 +17,7 @@ flowchart LR
 | Layer | Choice | ADR |
 |---|---|---|
 | Repository | pnpm workspaces + Turborepo monorepo | [0001](../decisions/0001-monorepo-pnpm-turborepo.md) |
+| Language | TypeScript `~6.0` (strict); TypeScript 7 lacks the compiler API the toolchain needs | — |
 | Backend | NestJS (modular monolith) | [0002](../decisions/0002-nestjs-prisma-postgresql.md) |
 | ORM | Prisma (raw SQL for PostGIS queries) | [0002](../decisions/0002-nestjs-prisma-postgresql.md) |
 | Database | PostgreSQL + PostGIS | [0002](../decisions/0002-nestjs-prisma-postgresql.md) |
@@ -32,7 +33,7 @@ flowchart LR
 | API docs | Swagger / OpenAPI (`@nestjs/swagger`) | — |
 | Logging | pino | — |
 | Hosting | Render (web static site + api), Neon (database) | [0005](../decisions/0005-free-tier-hosting.md) |
-| Testing | Jest + Supertest, API only for now | [0008](../decisions/0008-api-only-testing-first.md) |
+| Testing | Vitest + Supertest, API only for now | [0008](../decisions/0008-api-only-testing-first.md), [0011](../decisions/0011-vitest-test-runner.md) |
 
 ## Repository layout
 

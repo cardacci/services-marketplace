@@ -1,0 +1,21 @@
+{
+	"name": "services-marketplace",
+	"private": true,
+	"packageManager": "pnpm@12.14.0",
+	"scripts": {
+		"build": "turbo run build",
+		"dev": "turbo run dev",
+		"format": "prettier --write .",
+		"lint": "turbo run lint",
+		"test": "turbo run test",
+		"typecheck": "turbo run typecheck"
+	},
+	"devDependencies": {
+		"@sm/config": "workspace:*",
+		"prettier": "^3.9.10",
+		"turbo": "^2.11.9"
+	},
+	"engines": {
+		"node": ">=24"
+	}
+}
